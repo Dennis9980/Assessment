@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">PomodoroApp</string>
+    <string name="timer_text">25:00</string>
+    <string name="button_text">Start</string>
+    <string name="task_text">Add your tasks here</string>
+    <string name="task_subtext">My Tasks</string>
+    <string name="add_task">Write your task</string>
+    <string name="add_button">Add</string>
+    <string name="delete_button">Delete</string>
+    <string name="clear_button">Clear</string>
+    <string name="tentang_aplikasi">Tentang Aplikasi</string>
+    <string name="deskripsi_apliksi">bdskjafkjhasjhfa</string>
+    <string name="belum_ada_data">Belum ada list</string>
+</resources>
