@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="org.d3if0119.pomodoroappnew.ui.home.HomeFragment"
-        android:label="home_fragment"
+        android:label="PomodoroApp"
         tools:layout="@layout/home_fragment" >
         <action
             android:id="@+id/action_homeFragment_to_tasksFragment"
@@ -20,10 +20,10 @@
     <fragment
         android:id="@+id/aboutFragment"
         android:name="org.d3if0119.pomodoroappnew.AboutFragment"
-        android:label="AboutFragment" />
+        android:label="About" />
     <fragment
         android:id="@+id/tasksFragment"
         android:name="org.d3if0119.pomodoroappnew.ui.tasks.TasksFragment"
-        android:label="tasks_fragment"
+        android:label="Tasks"
         tools:layout="@layout/tasks_fragment" />
 </navigation>

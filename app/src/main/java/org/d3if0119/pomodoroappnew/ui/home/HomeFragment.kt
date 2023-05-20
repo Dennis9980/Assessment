@@ -10,19 +10,25 @@ import android.os.CountDownTimer
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.NotificationCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import org.d3if0119.pomodoroappnew.R
+import org.d3if0119.pomodoroappnew.ui.settings.ViewModelUI
 import org.d3if0119.pomodoroappnew.databinding.HomeFragmentBinding
 
 class HomeFragment : Fragment() {
-    private var binding: HomeFragmentBinding? = null
+    private lateinit var binding: HomeFragmentBinding
     private var timer: CountDownTimer? = null
     private var timerRunning = false
     private var remainingTime: Long = 0
     private val CHANNEL_ID = "my_channel"
+    private val viewModelActivity: ViewModelUI by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,10 +36,8 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = HomeFragmentBinding.inflate(inflater, container, false)
-        val activity = requireActivity() as AppCompatActivity
-        activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
         setHasOptionsMenu(true)
-        return binding!!.root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -156,6 +160,12 @@ class HomeFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.navigation_menu, menu)
+        lifecycleScope.launch {
+            val isChecked = viewModelActivity.getUIMode.first()
+            val item = menu.findItem(R.id.night_mode)
+            item.isChecked = isChecked
+            setUIMode(item, isChecked)
+        }
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
@@ -169,13 +179,27 @@ class HomeFragment : Fragment() {
                     R.id.action_homeFragment_to_aboutFragment)
                 return true
             }
+            R.id.night_mode -> {
+                item.isChecked = !item.isChecked
+                setUIMode(item, item.isChecked)
+                true
+            }
         }
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding = null
+    private fun setUIMode(item: MenuItem, isChecked: Boolean) {
+        if (isChecked) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            viewModelActivity.saveToDataStore(true)
+            item.setIcon(R.drawable.baseline_light_mode_24)
+
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            viewModelActivity.saveToDataStore(false)
+            item.setIcon(R.drawable.baseline_dark_mode_24)
+
+        }
     }
 }
 
