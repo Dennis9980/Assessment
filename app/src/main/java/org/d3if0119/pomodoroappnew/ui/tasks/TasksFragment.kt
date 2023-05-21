@@ -30,7 +30,13 @@ class TasksFragment : Fragment() {
     private lateinit var myAdapter: TasksAdapter
     private lateinit var binding: TasksFragmentBinding
     private val itemList = mutableListOf<String>()
-    private val adapter by lazy { ArrayAdapter(requireContext(), android.R.layout.simple_list_item_multiple_choice, itemList) }
+    private val adapter by lazy {
+        ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_list_item_multiple_choice,
+            itemList
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,12 +48,14 @@ class TasksFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        myAdapter = TasksAdapter(viewModel::deleteTask)
-        with(binding.listView){
+        myAdapter = TasksAdapter(viewModel::deleteTask, this::listDelete)
+        with(binding.listView) {
             addItemDecoration(DividerItemDecoration(context, RecyclerView.VERTICAL))
             adapter = myAdapter
+
             setHasFixedSize(true)
             Log.d("delete", "data berhasil dihapus")
+
         }
 
         viewModel.tasksLiveData.observe(viewLifecycleOwner) {
@@ -65,7 +73,8 @@ class TasksFragment : Fragment() {
                 binding.addText.editText?.text?.clear()
                 myAdapter.notifyDataSetChanged()
             } else {
-                Toast.makeText(requireContext(), "Task tidak boleh kosong", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Task tidak boleh kosong", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
 
@@ -74,5 +83,17 @@ class TasksFragment : Fragment() {
             itemList.addAll(tasks.map { it.name })
             adapter.notifyDataSetChanged()
         }
+    }
+
+    private fun listDelete(tasks: TaskEntity) {
+        MaterialAlertDialogBuilder(requireContext())
+            .setMessage("Menghapus task?")
+            .setPositiveButton("Iya") { _, _ ->
+                viewModel.deleteTask(tasks)
+            }
+            .setNegativeButton("Tidak") { dialog, _ ->
+                dialog.cancel()
+            }
+            .show()
     }
 }

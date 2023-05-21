@@ -9,10 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import org.d3if0119.pomodoroappnew.databinding.ListTasksBinding
 import org.d3if0119.pomodoroappnew.db.TaskEntity
 
-class TasksAdapter(private val onDelete: (TaskEntity)->Unit) : ListAdapter<TaskEntity, TasksAdapter.ViewHolder>(DIFF_CALLBACK) {
-    companion object{
+class TasksAdapter(private val onDelete: (TaskEntity) -> Unit, private val showDeleteConfirmation: (TaskEntity)->Unit) :
+    ListAdapter<TaskEntity, TasksAdapter.ViewHolder>(DIFF_CALLBACK) {
+    companion object {
         private val DIFF_CALLBACK =
-            object : DiffUtil.ItemCallback<TaskEntity>(){
+            object : DiffUtil.ItemCallback<TaskEntity>() {
                 override fun areItemsTheSame(oldData: TaskEntity, newData: TaskEntity): Boolean {
                     return oldData.id == newData.id
                 }
@@ -22,6 +23,7 @@ class TasksAdapter(private val onDelete: (TaskEntity)->Unit) : ListAdapter<TaskE
                 }
             }
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ListTasksBinding.inflate(inflater, parent, false)
@@ -31,6 +33,7 @@ class TasksAdapter(private val onDelete: (TaskEntity)->Unit) : ListAdapter<TaskE
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind((getItem(position)))
     }
+
     inner class ViewHolder(
         private val binding: ListTasksBinding
     ) : RecyclerView.ViewHolder(binding.root) {
@@ -39,7 +42,11 @@ class TasksAdapter(private val onDelete: (TaskEntity)->Unit) : ListAdapter<TaskE
             binding.list.text = item.name
 
             binding.deleteButton.setOnClickListener {
-                onDelete(item)
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    val task = getItem(position)
+                    showDeleteConfirmation(task)
+                }
             }
         }
     }
