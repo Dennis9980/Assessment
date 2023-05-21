@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="org.d3if0119.pomodoroappnew.ui.home.HomeFragment"
-        android:label="PomodoroApp"
+        android:label="CUPER"
         tools:layout="@layout/home_fragment" >
         <action
             android:id="@+id/action_homeFragment_to_tasksFragment"
