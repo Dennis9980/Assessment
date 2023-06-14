@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.NotificationCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.flow.first
@@ -21,6 +22,7 @@ import kotlinx.coroutines.launch
 import org.d3if0119.pomodoroappnew.R
 import org.d3if0119.pomodoroappnew.ui.settings.ViewModelUI
 import org.d3if0119.pomodoroappnew.databinding.HomeFragmentBinding
+import org.d3if0119.pomodoroappnew.ui.recomendation.RecomendationViewModel
 
 class HomeFragment : Fragment() {
     private lateinit var binding: HomeFragmentBinding
@@ -29,6 +31,9 @@ class HomeFragment : Fragment() {
     private var remainingTime: Long = 0
     private val CHANNEL_ID = "my_channel"
     private val viewModelActivity: ViewModelUI by activityViewModels()
+    private val viewModel: HomeViewModel by lazy {
+        ViewModelProvider(this)[HomeViewModel::class.java]
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,13 +47,14 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.schedulUpdater(requireActivity().application)
 
         binding?.button?.setOnClickListener {
             if (!timerRunning) {
                 if (remainingTime > 0) {
-                    resumeTimer() // Resume the timer from the remaining time
+                    resumeTimer()
                 } else {
-                    startTimer() // Start a new timer
+                    startTimer()
                 }
             } else {
                 pauseTimer()
@@ -57,10 +63,10 @@ class HomeFragment : Fragment() {
     }
 
     private fun startTimer() {
-        val lengthTimer: Long = if (remainingTime > 0) remainingTime else 25 * 60 * 1000
+        val lengthTimer: Long = if (remainingTime > 0) remainingTime else 1 * 60 * 1000
         timer = object : CountDownTimer(lengthTimer, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                remainingTime = millisUntilFinished // Update the remaining time
+                remainingTime = millisUntilFinished
                 val minute = millisUntilFinished / 1000 / 60
                 val second = millisUntilFinished / 1000 % 60
                 binding?.textTimer?.text = "$minute:$second"
@@ -94,14 +100,14 @@ class HomeFragment : Fragment() {
     }
 
     private fun resumeTimer() {
-        startTimer() // Start a new timer with the remaining time
+        startTimer()
     }
 
     private fun breakTimer() {
-        val timerLength: Long = 5 * 60 * 1000
+        val timerLength: Long = 1 * 60 * 1000
         timer = object : CountDownTimer(timerLength, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                remainingTime = millisUntilFinished // Update the remaining time
+                remainingTime = millisUntilFinished
                 val minutes = millisUntilFinished / 1000 / 60
                 val seconds = millisUntilFinished / 1000 % 60
                 binding?.textTimer?.text = "$minutes:$seconds"
@@ -134,9 +140,7 @@ class HomeFragment : Fragment() {
         val notificationManager =
             requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        // Check if Android version is greater than or equal to Oreo
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            // Create notification channel
             val channel = NotificationChannel(
                 CHANNEL_ID,
                 "My Channel",
@@ -145,15 +149,13 @@ class HomeFragment : Fragment() {
             notificationManager.createNotificationChannel(channel)
         }
 
-        // Build notification
         val builder = NotificationCompat.Builder(requireContext(), CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.cuper)
             .setContentTitle("Waktu telah selesai!")
-            .setContentText("Waktu timer telah habis berjalan.")
+            .setContentText("Waktu timer telah habis niih!!")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setAutoCancel(true)
 
-        // Show notification
         notificationManager.notify(0, builder.build())
     }
 
@@ -167,16 +169,25 @@ class HomeFragment : Fragment() {
             setUIMode(item, isChecked)
         }
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            R.id.tasks ->{
+        when (item.itemId) {
+            R.id.tasks -> {
                 findNavController().navigate(
-                    R.id.action_homeFragment_to_tasksFragment)
+                    R.id.action_homeFragment_to_tasksFragment
+                )
                 return true
             }
-            R.id.about ->{
+            R.id.recomendation -> {
                 findNavController().navigate(
-                    R.id.action_homeFragment_to_aboutFragment)
+                    R.id.action_homeFragment_to_recomendationFragment
+                )
+                return true
+            }
+            R.id.about -> {
+                findNavController().navigate(
+                    R.id.action_homeFragment_to_aboutFragment
+                )
                 return true
             }
             R.id.night_mode -> {

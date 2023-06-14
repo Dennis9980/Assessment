@@ -7,6 +7,10 @@
         android:title="Tasks"
         android:icon="@drawable/baseline_task_24"/>
     <item
+        android:id="@+id/recomendation"
+        android:title="Recomendation Book"
+        />
+    <item
         android:id="@+id/night_mode"
         android:checkable="true"
         android:icon="@drawable/baseline_dark_mode_24"
@@ -16,6 +20,7 @@
         android:id="@+id/about"
         android:icon="@drawable/baseline_info_24"
         android:title="@string/tentang_aplikasi" />
+
 
 
 </menu>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PomodoroApp</string>
+    <string name="app_name">Cuper</string>
     <string name="timer_text">25:00</string>
     <string name="button_text">Start</string>
     <string name="task_text">Add your tasks here</string>
@@ -10,5 +10,6 @@
     <string name="clear_button">Clear</string>
     <string name="tentang_aplikasi">Tentang Aplikasi</string>
     <string name="deskripsi_apliksi">Cuper is a powerful mobile application designed to assist users in staying focused and productive during their study sessions. By incorporating the popular Pomodoro Technique and a comprehensive to-do list feature, Cuper aims to enhance the learning experience and help users achieve their goals efficiently.</string>
-    <string name="belum_ada_data">Belum ada list</string>
+    <string name="belum_ada_data">Belum ada list niihh... Yuk tambahin</string>
+    <string name="koneksi_error">Yaahh internetmu menghilaang nih :)</string>
 </resources>
