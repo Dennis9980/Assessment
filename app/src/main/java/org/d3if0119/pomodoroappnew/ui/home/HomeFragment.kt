@@ -63,7 +63,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun startTimer() {
-        val lengthTimer: Long = if (remainingTime > 0) remainingTime else 1 * 60 * 1000
+        val lengthTimer: Long = if (remainingTime > 0) remainingTime else 25 * 60 * 1000
         timer = object : CountDownTimer(lengthTimer, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 remainingTime = millisUntilFinished
@@ -104,7 +104,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun breakTimer() {
-        val timerLength: Long = 1 * 60 * 1000
+        val timerLength: Long = 5 * 60 * 1000
         timer = object : CountDownTimer(timerLength, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 remainingTime = millisUntilFinished
